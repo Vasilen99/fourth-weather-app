@@ -1,0 +1,12 @@
+.loading-container {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 150px auto auto auto;
+}
+.text {
+  margin-left: 45px;
+  font-size: 20px;
+  font-weight: 600;
+}
