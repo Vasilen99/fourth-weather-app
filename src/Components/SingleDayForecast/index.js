@@ -6,13 +6,14 @@ import AirIcon from "@mui/icons-material/Air";
 export default function SingleDayForecast({
   date = format(new Date(), "dd/MM/yyyy kk:mm"),
   dateText = "Date",
+  selectedDayStyle = false,
   temperature = "20",
   imgId = "10d",
   description = "sunny",
   windSpeed = "3",
 }) {
   return (
-    <div className={`single-day-container`}>
+    <div className={`single-day-container ${selectedDayStyle ? 'selected-container': ''}`}>
       <div className="date-container">{`${dateText} : ${date}`}</div>
       <div className="temperature-container">
         <img

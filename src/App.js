@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import React from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
 import "./App.css";
+import { Button } from "@mui/material";
 import Loading from "./Components/Loading";
 import SingleDayForecast from "./Components/SingleDayForecast";
+import ForecastByHours from "./Components/ForecastByHours";
 import { format } from "date-fns";
 const API_KEY = "b1cd543fab32ccde7564f7940c3ca1c8";
 
@@ -14,6 +16,8 @@ export default function App() {
   const [lat, setLat] = useState("51.509865");
   const [lon, setLon] = useState("-0.118092");
   const [loading, setLoading] = useState(false);
+  const [selectedDateForForecastByHours, setSelectedDateForForecastByHours] =
+    useState("");
 
   useEffect(() => {
     const fetchDataFromAPI = async () => {
@@ -58,10 +62,11 @@ export default function App() {
       setLoading(true);
       setLat(position.coords.latitude);
       setLon(position.coords.longitude);
+      setSelectedDateForForecastByHours("");
     }
   };
 
-  if (!data || !Object.keys(data) || !Object.keys(data).length)
+  if (!data || !Object.keys(data).length || !daysForecast.length)
     return <Loading />;
   return (
     <div className="root">
@@ -86,6 +91,10 @@ export default function App() {
                   <SingleDayForecast
                     date={formattedDate}
                     dateText="Date"
+                    selectedDayStyle={
+                      selectedDateForForecastByHours.split(" ")[0] ===
+                      singleDayForecastData.dt_txt.split(" ")[0]
+                    }
                     temperature={`${Number(
                       singleDayForecastData.main.temp
                     ).toFixed(0)}`}
@@ -93,7 +102,15 @@ export default function App() {
                     imgId={singleDayForecastData.weather[0].icon}
                     windSpeed={singleDayForecastData.wind.speed}
                   />
-                  <Button className="view-more-button" color="secondary">
+                  <Button
+                    onClick={() =>
+                      setSelectedDateForForecastByHours(
+                        selectedDateForForecastByHours ? '' : singleDayForecastData.dt_txt
+                      )
+                    }
+                    className="view-more-button"
+                    color="secondary"
+                  >
                     View Details
                   </Button>
                 </div>
@@ -102,6 +119,16 @@ export default function App() {
           </div>
         </>
       )}
+      {selectedDateForForecastByHours ? 
+        <ForecastByHours
+        hourlyForecast={data.list.filter(
+            (eachHourInterval) =>
+              eachHourInterval.dt_txt.split(" ")[0] === selectedDateForForecastByHours.split(" ")[0]
+          )}
+          selectedDate={selectedDateForForecastByHours.split(" ")[0]}
+          closeForecastByHours={() => setSelectedDateForForecastByHours("")}
+        />
+       : null}
     </div>
   );
 }
