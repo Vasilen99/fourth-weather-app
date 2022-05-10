@@ -6,13 +6,13 @@ import { Button } from "@mui/material";
 import Loading from "./Components/Loading";
 import SingleDayForecast from "./Components/SingleDayForecast";
 import ForecastByHours from "./Components/ForecastByHours";
+import Search from "./Components/Search";
 import { format } from "date-fns";
 const API_KEY = "b1cd543fab32ccde7564f7940c3ca1c8";
 
 export default function App() {
   const [data, setData] = useState({});
   const [daysForecast, setDaysForecast] = useState([]);
-  const [error, setError] = useState(false);
   const [lat, setLat] = useState("51.509865");
   const [lon, setLon] = useState("-0.118092");
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function App() {
           setLoading(false);
         }
       } catch (err) {
-        setError(err);
+        console.error(err)
       }
     };
     fetchDataFromAPI();
@@ -66,6 +66,12 @@ export default function App() {
     }
   };
 
+  const changeCityFromSearch = (cityObj) => {
+    if (cityObj && cityObj.coords && cityObj.label) {
+      setLocation(cityObj);
+    }
+  };
+
   if (!data || !Object.keys(data).length || !daysForecast.length)
     return <Loading />;
   return (
@@ -74,6 +80,7 @@ export default function App() {
         <Button onClick={() => getLocation()} color="primary">
           Retreive User Data
         </Button>
+        <Search setLocation={(event, value) => changeCityFromSearch(value)} />
       </div>
       {loading ? (
         <Loading />
