@@ -3,10 +3,13 @@ import axios from "axios";
 import { Button } from "@mui/material";
 import "./App.css";
 import Loading from "./Components/Loading";
+import SingleDayForecast from "./Components/SingleDayForecast";
+import { format } from "date-fns";
 const API_KEY = "b1cd543fab32ccde7564f7940c3ca1c8";
 
 export default function App() {
   const [data, setData] = useState({});
+  const [daysForecast, setDaysForecast] = useState([]);
   const [error, setError] = useState(false);
   const [lat, setLat] = useState("51.509865");
   const [lon, setLon] = useState("-0.118092");
@@ -25,6 +28,13 @@ export default function App() {
           result.data.list &&
           result.data.list.length
         ) {
+          const daysArr = [];
+          result.data.list.forEach((each3hInterval, index) => {
+            if (index % 8 === 0) {
+              daysArr.push(each3hInterval);
+            }
+          });
+          setDaysForecast(daysArr);
           setData(result.data);
           setLoading(false);
         }
@@ -60,7 +70,38 @@ export default function App() {
           Retreive User Data
         </Button>
       </div>
-      {loading ? <Loading /> : <h1>{`Weather in ${data.city.name}`}</h1>}
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <h1>{`Weather in ${data.city.name}`}</h1>
+          <div className="forecast-by-days-container">
+            {daysForecast.map((singleDayForecastData) => {
+              const formattedDate = format(
+                new Date(singleDayForecastData.dt_txt),
+                "dd/MM/yyyy kk:mm"
+              );
+              return (
+                <div key={singleDayForecastData.dt}>
+                  <SingleDayForecast
+                    date={formattedDate}
+                    dateText="Date"
+                    temperature={`${Number(
+                      singleDayForecastData.main.temp
+                    ).toFixed(0)}`}
+                    description={singleDayForecastData.weather[0].description}
+                    imgId={singleDayForecastData.weather[0].icon}
+                    windSpeed={singleDayForecastData.wind.speed}
+                  />
+                  <Button className="view-more-button" color="secondary">
+                    View Details
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }

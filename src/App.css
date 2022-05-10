@@ -13,3 +13,22 @@
   padding: 10px 15px;
   border-radius: 20px;
 }
+
+.MuiButton-root:hover { 
+  background-color: yellow !important;
+  text-decoration: unset !important;
+}
+
+.forecast-by-days-container { 
+  display: grid;
+  grid-template-columns: repeat(5,max-content);
+  justify-content: space-between;
+}
+
+.forecast-by-days-container .view-more-button { 
+  border-radius: 20px;
+  background-color: yellow;
+  color: blue;
+  margin-top: 15px;
+  padding: 5px 10px;
+}

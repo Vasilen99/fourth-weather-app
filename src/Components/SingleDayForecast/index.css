@@ -1,0 +1,26 @@
+.single-day-container { 
+    display: grid;
+    padding: 10px;
+}
+
+.temperature-container { 
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.wind-container { 
+    display: flex;
+    align-items: center;
+}
+
+.wind-container .MuiSvgIcon-root { 
+    width: 40px;
+    height: 40px;
+    margin-right: 6px;
+}
+
+.selected-container { 
+    background-color: burlywood;
+    border-radius: 20px;
+}
