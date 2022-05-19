@@ -47,7 +47,7 @@ export default function App() {
       }
     };
     fetchDataFromAPI();
-  }, [lat && lon]);
+  }, [lat, lon]);
 
   const getLocation = () => {
     setLoading(true);
@@ -93,15 +93,13 @@ export default function App() {
                 new Date(singleDayForecastData.dt_txt),
                 "dd/MM/yyyy kk:mm"
               );
+              const currentElementCheck = selectedDateForForecastByHours.split(" ")[0] === singleDayForecastData.dt_txt.split(" ")[0]
               return (
                 <div key={singleDayForecastData.dt}>
                   <SingleDayForecast
                     date={formattedDate}
                     dateText="Date"
-                    selectedDayStyle={
-                      selectedDateForForecastByHours.split(" ")[0] ===
-                      singleDayForecastData.dt_txt.split(" ")[0]
-                    }
+                    selectedDayStyle={ currentElementCheck }
                     temperature={`${Number(
                       singleDayForecastData.main.temp
                     ).toFixed(0)}`}
@@ -112,7 +110,7 @@ export default function App() {
                   <Button
                     onClick={() =>
                       setSelectedDateForForecastByHours(
-                        selectedDateForForecastByHours ? '' : singleDayForecastData.dt_txt
+                        selectedDateForForecastByHours && currentElementCheck  ? '' : singleDayForecastData.dt_txt
                       )
                     }
                     className="view-more-button"
